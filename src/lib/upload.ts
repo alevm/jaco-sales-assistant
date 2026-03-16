@@ -1,0 +1,31 @@
+import fs from "fs";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+
+const UPLOAD_DIR = path.resolve("public/uploads");
+
+export function ensureUploadDir() {
+  if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  }
+}
+
+export async function saveUpload(file: File): Promise<string> {
+  ensureUploadDir();
+
+  const ext = path.extname(file.name) || ".jpg";
+  const filename = `${uuidv4()}${ext}`;
+  const filepath = path.join(UPLOAD_DIR, filename);
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  fs.writeFileSync(filepath, buffer);
+
+  return `/uploads/${filename}`;
+}
+
+export function deleteUpload(relativePath: string) {
+  const fullPath = path.resolve("public", relativePath.replace(/^\//, ""));
+  if (fs.existsSync(fullPath)) {
+    fs.unlinkSync(fullPath);
+  }
+}
