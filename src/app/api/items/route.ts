@@ -53,10 +53,10 @@ export async function POST(request: NextRequest) {
   const id = uuidv4();
 
   const stmt = db.prepare(`
-    INSERT INTO items (id, lot_id, item_type, brand, era, material, color, size, condition,
-      cogs, sale_price, marketplace, status, description_it, description_en,
+    INSERT INTO items (id, lot_id, item_type, brand, era, era_style, material, color, size, condition,
+      cogs, sale_price, shipping_cost, marketplace, status, description_it, description_en,
       recognition_raw, image_paths)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   stmt.run(
@@ -65,12 +65,14 @@ export async function POST(request: NextRequest) {
     body.item_type || null,
     body.brand || null,
     body.era || null,
+    body.era_style || null,
     body.material || null,
     body.color || null,
     body.size || null,
     body.condition || null,
     body.cogs || null,
     body.sale_price || null,
+    body.shipping_cost || 0,
     body.marketplace || null,
     body.status || "draft",
     body.description_it || null,

@@ -34,8 +34,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   const values: unknown[] = [];
 
   const updatable = [
-    "lot_id", "item_type", "brand", "era", "material", "color", "size",
-    "condition", "cogs", "sale_price", "sold_price", "marketplace", "status",
+    "lot_id", "item_type", "brand", "era", "era_style", "material", "color", "size",
+    "condition", "cogs", "sale_price", "sold_price", "shipping_cost", "marketplace", "status",
     "sold_at", "description_it", "description_en",
   ];
 
