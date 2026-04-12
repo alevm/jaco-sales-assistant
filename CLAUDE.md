@@ -21,13 +21,26 @@ Next.js 14+ (App Router, TypeScript), Claude API (Vision + text), SQLite (better
 
 ## Critical notes (from 2026-04-12 panel review)
 
-**This project is NO-GO for deploy.** Before any deploy handoff:
+**Status: CONDITIONAL GO** (single trusted operator, behind VPN/basic_auth).
+
+Completed:
 - [x] Fix path traversal in `src/lib/recognize.ts:42` (CRITICAL) — fixed
 - [x] Fix stored XSS in `src/lib/upload.ts:16` (CRITICAL) — fixed
 - [x] Fix path traversal in `deleteUpload` (`src/lib/upload.ts:31-36`) — fixed
-- [x] Replace fake test suite — 21 vitest tests now
+- [x] Replace fake test suite — 55 vitest tests now
 - [x] Write `Dockerfile` and `validate.sh` per Sisyphus onboarding guide
 - [x] Add `/api/health` endpoint
-- [ ] Marketing positioning brief
+- [x] Harden Claude call sites (try/catch JSON.parse, 30s AbortController timeout)
+- [x] Add rate limiting on LLM endpoints (20 req/min per token)
+- [x] Add CSP + security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy)
+- [x] Fix GDPR: Umami cookieless mode (`data-do-not-track="true"`)
+- [x] Add zod validation on all POST/PUT API routes
+- [x] Add Claude mock infrastructure + tests for describe/suggest-price
+- [x] Cleanup dead files (conftest.py, __pycache__)
+- [x] README accuracy (test count, /api/health in routes table)
+- [x] Marketing positioning brief (`docs/POSITIONING.md`)
+- [x] Description output length cap (2000 chars)
 
-See `ARCHITECT_REVIEW_2026-04-11.md` for full findings.
+Remaining P2 items (prompt injection, float money, fee accuracy, structured logging, SIGTERM) are acceptable at A- for single-tenant MVP behind auth.
+
+See `PANEL_REVIEW_A_MINUS.md` for full gap analysis and `ARCHITECT_REVIEW_2026-04-11.md` for original findings.
