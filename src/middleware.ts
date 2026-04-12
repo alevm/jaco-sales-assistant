@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, isLLMEndpoint } from "@/lib/rate-limit";
 
 export function middleware(request: NextRequest) {
   // Only protect API routes
@@ -26,6 +27,23 @@ export function middleware(request: NextRequest) {
       { error: "Unauthorized" },
       { status: 401 }
     );
+  }
+
+  // Rate limit LLM endpoints (20 req/min per token)
+  if (request.method === "POST" && isLLMEndpoint(request.nextUrl.pathname)) {
+    const token = authHeader.replace("Bearer ", "");
+    const result = checkRateLimit(token);
+    if (!result.allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Try again later." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(Math.ceil((result.retryAfterMs || 60000) / 1000)),
+          },
+        }
+      );
+    }
   }
 
   return NextResponse.next();
