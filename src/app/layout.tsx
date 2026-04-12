@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="it">
       <head>
-        <script defer src="https://analytics.levm.eu/script.js" data-website-id="afab5d37-791b-4e17-8870-c714c3fc7751"></script>
+        <script defer src="https://analytics.levm.eu/script.js" data-website-id="afab5d37-791b-4e17-8870-c714c3fc7751" data-do-not-track="true"></script>
       </head>
       <body className="flex min-h-screen">
         <Sidebar />
