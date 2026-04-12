@@ -10,10 +10,15 @@ export function ensureUploadDir() {
   }
 }
 
+const ALLOWED_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
+
 export async function saveUpload(file: File): Promise<string> {
   ensureUploadDir();
 
-  const ext = path.extname(file.name) || ".jpg";
+  const ext = (path.extname(file.name) || ".jpg").toLowerCase();
+  if (!ALLOWED_EXTENSIONS.has(ext)) {
+    throw new Error(`File extension not allowed: ${ext}`);
+  }
   const filename = `${uuidv4()}${ext}`;
   const filepath = path.join(UPLOAD_DIR, filename);
 

@@ -36,10 +36,24 @@ Rules:
 - Confidence is 0-1 reflecting how certain you are overall
 - Return ONLY the JSON, no markdown fences, no explanation`;
 
+const UPLOADS_ROOT = path.resolve("public/uploads");
+
+export function validateImagePath(imagePath: string): string {
+  const cleaned = imagePath.replace(/^\//, "");
+  if (cleaned.includes("..")) {
+    throw new Error("Invalid image path: path traversal not allowed");
+  }
+  const fullPath = path.resolve("public", cleaned);
+  if (!fullPath.startsWith(UPLOADS_ROOT + path.sep) && fullPath !== UPLOADS_ROOT) {
+    throw new Error("Invalid image path: must be within uploads directory");
+  }
+  return fullPath;
+}
+
 export async function recognizeItem(imagePath: string): Promise<RecognitionResult> {
   const claude = getClaude();
 
-  const fullPath = path.resolve("public", imagePath.replace(/^\//, ""));
+  const fullPath = validateImagePath(imagePath);
   const imageData = fs.readFileSync(fullPath);
   const base64 = imageData.toString("base64");
 

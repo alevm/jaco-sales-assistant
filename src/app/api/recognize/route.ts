@@ -8,6 +8,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "imagePath required" }, { status: 400 });
   }
 
-  const result = await recognizeItem(imagePath);
-  return NextResponse.json(result);
+  try {
+    const result = await recognizeItem(imagePath);
+    return NextResponse.json(result);
+  } catch (e) {
+    const msg = (e as Error).message;
+    if (msg.startsWith("Invalid image path")) {
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
+    throw e;
+  }
 }
