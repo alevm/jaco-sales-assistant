@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 import type { Item, Tag } from "@/types/item";
+import { CreateItemSchema, validateBody } from "@/lib/schemas";
 
 export async function GET(request: NextRequest) {
   const db = getDb();
@@ -49,7 +50,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const db = getDb();
-  const body = await request.json();
+  const raw = await request.json();
+  const parsed = validateBody(CreateItemSchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+  const body = parsed.data;
   const id = uuidv4();
 
   const stmt = db.prepare(`
@@ -78,7 +84,7 @@ export async function POST(request: NextRequest) {
     body.description_it || null,
     body.description_en || null,
     body.recognition_raw ? JSON.stringify(body.recognition_raw) : null,
-    JSON.stringify(body.image_paths || [])
+    JSON.stringify(body.image_paths)
   );
 
   // Insert tags

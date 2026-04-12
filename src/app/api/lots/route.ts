@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
+import { CreateLotSchema, validateBody } from "@/lib/schemas";
 
 export async function GET() {
   const db = getDb();
@@ -17,7 +18,12 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const db = getDb();
-  const body = await request.json();
+  const raw = await request.json();
+  const parsed = validateBody(CreateLotSchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+  const body = parsed.data;
   const id = uuidv4();
 
   db.prepare("INSERT INTO lots (id, name, total_cogs, notes) VALUES (?, ?, ?, ?)").run(

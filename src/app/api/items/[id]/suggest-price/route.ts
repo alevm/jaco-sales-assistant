@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { suggestPrice } from "@/lib/suggest-price";
 import type { Item, Marketplace, RecognitionResult } from "@/types/item";
+import { SuggestPriceBodySchema, validateBody } from "@/lib/schemas";
 
 export async function POST(
   request: NextRequest,
@@ -9,8 +10,12 @@ export async function POST(
 ) {
   const { id } = await params;
   const db = getDb();
-  const body = await request.json();
-  const marketplace = (body.marketplace || "vinted") as Marketplace;
+  const raw = await request.json();
+  const parsed = validateBody(SuggestPriceBodySchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+  const marketplace = parsed.data.marketplace as Marketplace;
 
   const item = db.prepare("SELECT * FROM items WHERE id = ?").get(id) as Item | undefined;
   if (!item) {

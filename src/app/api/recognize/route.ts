@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recognizeItem } from "@/lib/recognize";
+import { RecognizeBodySchema, validateBody } from "@/lib/schemas";
 
 export async function POST(request: NextRequest) {
-  const { imagePath } = await request.json();
-
-  if (!imagePath) {
-    return NextResponse.json({ error: "imagePath required" }, { status: 400 });
+  const raw = await request.json();
+  const parsed = validateBody(RecognizeBodySchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
   }
 
   try {
-    const result = await recognizeItem(imagePath);
+    const result = await recognizeItem(parsed.data.imagePath);
     return NextResponse.json(result);
   } catch (e) {
     const msg = (e as Error).message;
-    if (msg.startsWith("Invalid image path")) {
+    if (msg.startsWith("Invalid image path") || msg.startsWith("Failed to parse Claude")) {
       return NextResponse.json({ error: msg }, { status: 400 });
     }
     throw e;

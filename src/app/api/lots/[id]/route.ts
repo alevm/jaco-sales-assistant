@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { UpdateLotSchema, validateBody } from "@/lib/schemas";
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -28,7 +29,12 @@ export async function PUT(
 ) {
   const { id } = await params;
   const db = getDb();
-  const body = await request.json();
+  const raw = await request.json();
+  const parsed = validateBody(UpdateLotSchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+  const body = parsed.data;
 
   const existing = db.prepare("SELECT * FROM lots WHERE id = ?").get(id);
   if (!existing) {

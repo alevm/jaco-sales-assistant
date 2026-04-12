@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { deleteUpload } from "@/lib/upload";
 import type { Item, Tag } from "@/types/item";
+import { UpdateItemSchema, validateBody } from "@/lib/schemas";
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -23,7 +24,12 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const db = getDb();
-  const body = await request.json();
+  const raw = await request.json();
+  const parsed = validateBody(UpdateItemSchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+  const body = parsed.data;
 
   const existing = db.prepare("SELECT * FROM items WHERE id = ?").get(id) as Item | undefined;
   if (!existing) {
@@ -42,7 +48,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   for (const field of updatable) {
     if (field in body) {
       fields.push(`${field} = ?`);
-      values.push(body[field]);
+      values.push((body as Record<string, unknown>)[field]);
     }
   }
 

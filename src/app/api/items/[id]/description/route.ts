@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { generateDescription } from "@/lib/describe";
 import type { Item, Marketplace, RecognitionResult } from "@/types/item";
+import { DescriptionBodySchema, validateBody } from "@/lib/schemas";
 
 export async function POST(
   request: NextRequest,
@@ -9,9 +10,13 @@ export async function POST(
 ) {
   const { id } = await params;
   const db = getDb();
-  const body = await request.json();
-  const marketplace = (body.marketplace || "vinted") as Marketplace;
-  const locale = (body.locale || "it") as "it" | "en";
+  const raw = await request.json();
+  const parsed = validateBody(DescriptionBodySchema, raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error }, { status: 400 });
+  }
+  const marketplace = parsed.data.marketplace as Marketplace;
+  const locale = parsed.data.locale;
 
   const item = db.prepare("SELECT * FROM items WHERE id = ?").get(id) as Item | undefined;
   if (!item) {
