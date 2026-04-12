@@ -1,4 +1,4 @@
-import { getClaude } from "./claude";
+import { callClaude, parseClaudeJSON } from "./claude";
 import type { RecognitionResult, Marketplace, Condition } from "@/types/item";
 import { MARKETPLACE_FEES } from "./marketplace-fees";
 
@@ -35,7 +35,6 @@ export async function suggestPrice(
   recognition: RecognitionResult,
   marketplace: Marketplace
 ): Promise<PriceSuggestion> {
-  const claude = getClaude();
   const fee = MARKETPLACE_FEES[marketplace];
 
   const itemInfo = `
@@ -50,7 +49,7 @@ Target marketplace: ${fee.name} (${fee.feePercent}% seller fee)
 Tags: ${recognition.tags.map((t) => t.value).join(", ")}
 `.trim();
 
-  const response = await claude.messages.create({
+  const response = await callClaude({
     model: "claude-sonnet-4-20250514",
     max_tokens: 256,
     temperature: 0.3,
@@ -64,6 +63,5 @@ Tags: ${recognition.tags.map((t) => t.value).join(", ")}
   });
 
   const text = response.content[0].type === "text" ? response.content[0].text : "";
-  const cleaned = text.replace(/```json\s*|\s*```/g, "").trim();
-  return JSON.parse(cleaned) as PriceSuggestion;
+  return parseClaudeJSON<PriceSuggestion>(text, "suggest-price");
 }

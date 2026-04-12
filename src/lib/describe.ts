@@ -1,4 +1,4 @@
-import { getClaude } from "./claude";
+import { callClaude } from "./claude";
 import type { RecognitionResult, Marketplace } from "@/types/item";
 
 function getSeason(): string {
@@ -175,7 +175,6 @@ export async function generateDescription(
   marketplace: Marketplace,
   locale: "it" | "en"
 ): Promise<string> {
-  const claude = getClaude();
   const basePrompt = PROMPTS[marketplace]?.[locale] || PROMPTS.vinted[locale];
   const season = getSeason();
   const seasonalHint = getSeasonalHint(season);
@@ -192,7 +191,7 @@ Condizione: ${recognition.condition}
 Tags: ${recognition.tags.map((t) => t.value).join(", ")}
 `.trim();
 
-  const response = await claude.messages.create({
+  const response = await callClaude({
     model: "claude-sonnet-4-20250514",
     max_tokens: 512,
     temperature: 0.7,
@@ -205,5 +204,8 @@ Tags: ${recognition.tags.map((t) => t.value).join(", ")}
     ],
   });
 
-  return response.content[0].type === "text" ? response.content[0].text : "";
+  const text = response.content[0].type === "text" ? response.content[0].text : "";
+  // Cap output length to prevent unbounded responses (D2)
+  const MAX_DESCRIPTION_LENGTH = 2000;
+  return text.slice(0, MAX_DESCRIPTION_LENGTH);
 }

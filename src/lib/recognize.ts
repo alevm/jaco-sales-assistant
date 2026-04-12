@@ -1,4 +1,4 @@
-import { getClaude } from "./claude";
+import { callClaude, parseClaudeJSON } from "./claude";
 import type { RecognitionResult } from "@/types/item";
 import fs from "fs";
 import path from "path";
@@ -51,8 +51,6 @@ export function validateImagePath(imagePath: string): string {
 }
 
 export async function recognizeItem(imagePath: string): Promise<RecognitionResult> {
-  const claude = getClaude();
-
   const fullPath = validateImagePath(imagePath);
   const imageData = fs.readFileSync(fullPath);
   const base64 = imageData.toString("base64");
@@ -67,7 +65,7 @@ export async function recognizeItem(imagePath: string): Promise<RecognitionResul
   };
   const mediaType = (mediaTypeMap[ext] || "image/jpeg") as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
 
-  const response = await claude.messages.create({
+  const response = await callClaude({
     model: "claude-sonnet-4-20250514",
     max_tokens: 1024,
     messages: [
@@ -93,6 +91,5 @@ export async function recognizeItem(imagePath: string): Promise<RecognitionResul
   });
 
   const text = response.content[0].type === "text" ? response.content[0].text : "";
-  const cleaned = text.replace(/```json\s*|\s*```/g, "").trim();
-  return JSON.parse(cleaned) as RecognitionResult;
+  return parseClaudeJSON<RecognitionResult>(text, "recognize");
 }
