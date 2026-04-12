@@ -6,6 +6,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Health endpoint is public (for load balancer / monitoring)
+  if (request.nextUrl.pathname === "/api/health") {
+    return NextResponse.next();
+  }
+
   const authHeader = request.headers.get("authorization");
   const expectedToken = process.env.API_SECRET;
 
