@@ -30,6 +30,9 @@ export async function saveUpload(file: File): Promise<string> {
 
 export function deleteUpload(relativePath: string) {
   const fullPath = path.resolve("public", relativePath.replace(/^\//, ""));
+  if (!fullPath.startsWith(UPLOAD_DIR + path.sep) && fullPath !== UPLOAD_DIR) {
+    throw new Error("Path traversal blocked: file is outside upload directory");
+  }
   if (fs.existsSync(fullPath)) {
     fs.unlinkSync(fullPath);
   }

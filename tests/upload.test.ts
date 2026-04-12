@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 // We test the ALLOWED_EXTENSIONS logic by importing saveUpload
 // and using a mock File. Since saveUpload writes to disk, we test
 // the extension validation by checking the thrown error.
-import { saveUpload } from "@/lib/upload";
+import { saveUpload, deleteUpload } from "@/lib/upload";
 import fs from "fs";
 import path from "path";
 
@@ -58,5 +58,25 @@ describe("saveUpload extension whitelist", () => {
     await expect(saveUpload(makeFile("evil.exe"))).rejects.toThrow(
       "File extension not allowed: .exe"
     );
+  });
+});
+
+describe("deleteUpload path traversal guard", () => {
+  it("blocks path traversal with ../", () => {
+    expect(() => deleteUpload("/../../../etc/passwd")).toThrow(
+      "Path traversal blocked"
+    );
+  });
+
+  it("blocks absolute path outside uploads", () => {
+    expect(() => deleteUpload("/etc/passwd")).toThrow(
+      "Path traversal blocked"
+    );
+  });
+
+  it("allows valid uploads path", async () => {
+    // Create a file, then delete it via deleteUpload
+    const result = await saveUpload(makeFile("to-delete.jpg"));
+    expect(() => deleteUpload(result)).not.toThrow();
   });
 });
