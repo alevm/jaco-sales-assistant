@@ -55,7 +55,7 @@ tests/
 npm test
 ```
 
-18 vitest tests covering security (path traversal, XSS via extension), margin math, and upload validation.
+55 vitest tests covering security (path traversal, XSS via extension), Claude call hardening, rate limiting, zod validation, margin math, description generation, price suggestions, and upload validation.
 
 ## API Routes
 
@@ -68,7 +68,12 @@ npm test
 | POST | `/api/items/[id]/description` | Generate marketplace descriptions |
 | GET/POST | `/api/lots` | List and create lots |
 | GET/PUT/DELETE | `/api/lots/[id]` | Lot CRUD with COGS auto-split |
+| GET | `/api/health` | Health check (public, no auth) |
 | GET | `/api/dashboard` | Margin analytics |
+
+## Positioning
+
+See [docs/POSITIONING.md](docs/POSITIONING.md) for value prop, target user, competitive differentiation, and unit economics.
 
 ## Roadmap
 
