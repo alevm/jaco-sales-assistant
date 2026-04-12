@@ -22,10 +22,12 @@ Next.js 14+ (App Router, TypeScript), Claude API (Vision + text), SQLite (better
 ## Critical notes (from 2026-04-12 panel review)
 
 **This project is NO-GO for deploy.** Before any deploy handoff:
-- [ ] Fix path traversal in `src/lib/recognize.ts:42` (CRITICAL)
-- [ ] Fix stored XSS in `src/lib/upload.ts:16` (CRITICAL)
-- [ ] Replace fake test suite (`tests/test_jaco.py` is regex grep, not runtime tests)
-- [ ] Write `Dockerfile` and `validate.sh` per Sisyphus onboarding guide
+- [x] Fix path traversal in `src/lib/recognize.ts:42` (CRITICAL) — fixed
+- [x] Fix stored XSS in `src/lib/upload.ts:16` (CRITICAL) — fixed
+- [x] Fix path traversal in `deleteUpload` (`src/lib/upload.ts:31-36`) — fixed
+- [x] Replace fake test suite — 21 vitest tests now
+- [x] Write `Dockerfile` and `validate.sh` per Sisyphus onboarding guide
+- [x] Add `/api/health` endpoint
 - [ ] Marketing positioning brief
 
 See `ARCHITECT_REVIEW_2026-04-11.md` for full findings.
