@@ -46,3 +46,4 @@ npm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 ARCHITECT_REVIEW_2026-04-11.md
+.claude/
