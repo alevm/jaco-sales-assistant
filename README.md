@@ -14,7 +14,7 @@ AI-powered sales assistant for vintage clothing. Supports the full lifecycle: im
 
 ```bash
 npm install
-cp .env.local.example .env.local  # Add your ANTHROPIC_API_KEY
+cp .env.example .env.local  # Add your ANTHROPIC_API_KEY
 npm run dev
 ```
 
@@ -44,25 +44,18 @@ src/
 data/
   migrations/     # SQLite schema (auto-applied on first run)
 tests/
-  test_jaco.py    # 192 QA tests (regression, security, a11y, perf, scalability, unit)
+  recognize.test.ts  # Recognition path traversal and validation tests
+  upload.test.ts     # Upload extension whitelist tests
+  margin.test.ts     # Margin calculation tests
 ```
 
 ## Testing
 
 ```bash
-pytest tests/ -v
+npm test
 ```
 
-192 tests across 6 categories required by [Sisyphus](https://github.com/alevm/Sisyphus) QA:
-
-| Category | Tests | What's checked |
-|----------|-------|---------------|
-| Regression | 95 | File structure, API contracts, database schema |
-| Security | 22 | No hardcoded secrets, input validation, file handling |
-| Accessibility | 18 | Semantic HTML, labels, alt attributes, color contrast |
-| Performance | 9 | Token limits, WAL mode, indexes, file size limits |
-| Scalability | 7 | Singletons, idempotent migrations, stateless APIs |
-| Unit | 38 | Margin calculation, recognition prompt, description prompt, fees |
+18 vitest tests covering security (path traversal, XSS via extension), margin math, and upload validation.
 
 ## API Routes
 
