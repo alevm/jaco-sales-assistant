@@ -19,6 +19,7 @@ export interface Item {
   description_it: string | null;
   description_en: string | null;
   recognition_raw: string | null;
+  listed_platforms: string;
   image_paths: string;
   created_at: string;
   updated_at: string;

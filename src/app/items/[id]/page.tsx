@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ItemWithTags, ItemStatus, Marketplace, Condition, CONDITION_LABELS } from "@/types/item";
+import { ListingPanel } from "@/components/items/listing-panel";
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
@@ -57,7 +58,7 @@ const TAG_COLORS = [
   "bg-pink-100 text-pink-800",
 ];
 
-type Tab = "details" | "pricing" | "descriptions" | "status";
+type Tab = "details" | "pricing" | "descriptions" | "listing" | "status";
 
 function eur(value: number | null): string {
   if (value == null) return "—";
@@ -381,6 +382,7 @@ export default function ItemDetailPage() {
           ["details", "Dettagli"],
           ["pricing", "Prezzi e Margine"],
           ["descriptions", "Descrizioni"],
+          ["listing", "Pubblica"],
           ["status", "Stato"],
         ] as [Tab, string][]).map(([key, label]) => (
           <button
@@ -562,6 +564,20 @@ export default function ItemDetailPage() {
               className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
           </div>
         </section>
+      )}
+
+      {/* Tab: Listing */}
+      {activeTab === "listing" && (
+        <ListingPanel
+          itemId={item.id}
+          listedPlatforms={(() => {
+            try {
+              return JSON.parse(item.listed_platforms || "[]");
+            } catch {
+              return [];
+            }
+          })()}
+        />
       )}
 
       {/* Tab: Status */}
