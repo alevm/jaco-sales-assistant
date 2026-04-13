@@ -47,6 +47,16 @@ New feature endpoints (T3):
 - [x] `POST /api/items/:id/sell` — mark sold with price, returns margin report (COGS, fees, net)
 - [x] `GET /api/items/duplicates?item_id=x` — flag similar items by type/brand/color/era/size scoring
 
+T3 Feature additions:
+- [x] `GET /api/items/:id/listing?platform=X` — generate platform-specific formatted listing (title, description, hashtags, category, price)
+- [x] `POST /api/items/:id/listing` — mark item as listed on a platform, track in `listed_platforms` column
+- [x] `DELETE /api/items/:id/listing?platform=X` — remove listing from platform tracking
+- [x] Platforms: Vinted IT, Depop, Wallapop, eBay (structured specifics), Vestiaire Collective
+- [x] "Pubblica" tab on item detail page — generate, copy-paste, and track listings per platform
+- [x] `GET /api/dashboard/trends?months=N` — price trend analysis: avg price by category/month, platform performance, margin trends, brand ranking
+- [x] SVG line charts on dashboard (no chart library): rolling avg price, margin trend, category comparison
+- [x] Platform performance table + top brand table on dashboard
+
 Remaining P2 items (prompt injection, float money, fee accuracy, structured logging, SIGTERM) are acceptable at A- for single-tenant MVP behind auth.
 
 See `PANEL_REVIEW_A_MINUS.md` for full gap analysis and `ARCHITECT_REVIEW_2026-04-11.md` for original findings.
