@@ -41,6 +41,12 @@ Completed:
 - [x] Marketing positioning brief (`docs/POSITIONING.md`)
 - [x] Description output length cap (2000 chars)
 
+New feature endpoints (T3):
+- [x] `POST /api/batch-upload` — upload up to 50 photos, AI recognizes each, creates draft items
+- [x] `GET /api/items/export?format=csv|json&status=listed` — export listings for Vinted/Depop cross-posting
+- [x] `POST /api/items/:id/sell` — mark sold with price, returns margin report (COGS, fees, net)
+- [x] `GET /api/items/duplicates?item_id=x` — flag similar items by type/brand/color/era/size scoring
+
 Remaining P2 items (prompt injection, float money, fee accuracy, structured logging, SIGTERM) are acceptable at A- for single-tenant MVP behind auth.
 
 See `PANEL_REVIEW_A_MINUS.md` for full gap analysis and `ARCHITECT_REVIEW_2026-04-11.md` for original findings.
