@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { DashboardData } from "@/types/dashboard";
+import { PriceTrends } from "@/components/dashboard/price-trends";
 
 function eur(value: number): string {
   return new Intl.NumberFormat("it-IT", {
@@ -281,6 +282,9 @@ export default function DashboardPage() {
           </div>
         </section>
       )}
+
+      {/* Price Trend Analysis */}
+      <PriceTrends />
 
       {/* Monthly Breakdown */}
       {by_period.length > 0 && (
