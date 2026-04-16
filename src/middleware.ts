@@ -12,27 +12,38 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Authentication: Authelia forward_auth (Remote-User header) or Bearer token
+  const remoteUser = request.headers.get("remote-user");
   const authHeader = request.headers.get("authorization");
-  const expectedToken = process.env.API_SECRET;
+  let rateLimitKey: string;
 
-  if (!expectedToken) {
-    return NextResponse.json(
-      { error: "Server misconfigured: API_SECRET not set" },
-      { status: 500 }
-    );
+  if (remoteUser) {
+    // Authenticated via Authelia — Caddy injects Remote-User after forward_auth
+    rateLimitKey = `authelia:${remoteUser}`;
+  } else {
+    // Fallback: programmatic access via Bearer token
+    const expectedToken = process.env.API_SECRET;
+
+    if (!expectedToken) {
+      return NextResponse.json(
+        { error: "Server misconfigured: API_SECRET not set" },
+        { status: 500 }
+      );
+    }
+
+    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    rateLimitKey = authHeader.replace("Bearer ", "");
   }
 
-  if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-
-  // Rate limit LLM endpoints (20 req/min per token)
+  // Rate limit LLM endpoints (20 req/min per key)
   if (request.method === "POST" && isLLMEndpoint(request.nextUrl.pathname)) {
-    const token = authHeader.replace("Bearer ", "");
-    const result = checkRateLimit(token);
+    const result = checkRateLimit(rateLimitKey);
     if (!result.allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Try again later." },
