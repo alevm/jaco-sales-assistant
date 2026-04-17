@@ -85,7 +85,7 @@ export default function LotsPage() {
           className="bg-white rounded-xl shadow-sm border border-stone-200 p-5 mb-6 space-y-4"
         >
           <h3 className="font-semibold text-stone-800">Nuovo Lotto</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-stone-600 mb-1">Nome</label>
               <input

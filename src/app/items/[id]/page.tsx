@@ -311,7 +311,7 @@ export default function ItemDetailPage() {
           <p className="text-xs text-stone-400 mt-1">ID: {item.id}</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1 ${STATUS_COLORS[item.status]}`}>
+          <span className={`px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1 ${STATUS_COLORS[item.status]}`}>
             <span aria-hidden="true">{STATUS_ICONS[item.status]}</span>
             {STATUS_LABELS[item.status]}
           </span>
@@ -331,7 +331,7 @@ export default function ItemDetailPage() {
                 aria-label={`Ingrandisci foto ${i + 1}`}
                 className="rounded-xl overflow-hidden border border-stone-200 hover:border-amber-400 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-amber-500"
               >
-                <img src={src} alt={`Foto ${i + 1}`} className="w-32 h-32 object-cover" />
+                <img src={src} alt={`Foto ${i + 1}`} className="w-24 h-24 sm:w-32 sm:h-32 object-cover" />
               </button>
             ))}
           </div>

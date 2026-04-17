@@ -204,15 +204,16 @@ export default function DashboardPage() {
             )}
           </div>
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-stone-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <caption className="sr-only">Capi in vendita ordinati per tempo di giacenza</caption>
               <thead>
                 <tr className="bg-stone-50 text-stone-500 text-left">
-                  <th scope="col" className="px-4 py-3 font-medium">Capo</th>
-                  <th scope="col" className="px-4 py-3 font-medium">Brand</th>
-                  <th scope="col" className="px-4 py-3 font-medium">Marketplace</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Prezzo</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Giorni</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Capo</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Brand</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Marketplace</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Prezzo</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Giorni</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -237,6 +238,7 @@ export default function DashboardPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
       )}
@@ -246,18 +248,19 @@ export default function DashboardPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-stone-700">Per Marketplace</h2>
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-stone-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <caption className="sr-only">Ripartizione vendite per marketplace</caption>
               <thead>
                 <tr className="bg-stone-50 text-stone-500 text-left">
-                  <th scope="col" className="px-4 py-3 font-medium">Marketplace</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Ricavo</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">COGS</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Commissioni</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Spedizioni</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Margine</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Margine %</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Vendite</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Marketplace</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Ricavo</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">COGS</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Commissioni</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Spedizioni</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine %</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Vendite</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -279,6 +282,7 @@ export default function DashboardPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
       )}
@@ -291,18 +295,19 @@ export default function DashboardPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-stone-700">Per Periodo</h2>
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-stone-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <caption className="sr-only">Ripartizione vendite per periodo mensile</caption>
               <thead>
                 <tr className="bg-stone-50 text-stone-500 text-left">
-                  <th scope="col" className="px-4 py-3 font-medium">Periodo</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Ricavo</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">COGS</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Commissioni</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Spedizioni</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Margine</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Margine %</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Vendite</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Periodo</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Ricavo</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">COGS</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Commissioni</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Spedizioni</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine %</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Vendite</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -324,6 +329,7 @@ export default function DashboardPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
       )}
@@ -333,17 +339,18 @@ export default function DashboardPage() {
         <section className="space-y-3">
           <h2 className="text-lg font-semibold text-stone-700">Vendite Recenti</h2>
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-stone-200">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <caption className="sr-only">Ultime 20 vendite con margini</caption>
               <thead>
                 <tr className="bg-stone-50 text-stone-500 text-left">
-                  <th scope="col" className="px-4 py-3 font-medium">Capo</th>
-                  <th scope="col" className="px-4 py-3 font-medium">Brand</th>
-                  <th scope="col" className="px-4 py-3 font-medium">Marketplace</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Prezzo Vendita</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">COGS</th>
-                  <th scope="col" className="px-4 py-3 font-medium text-right">Margine</th>
-                  <th scope="col" className="px-4 py-3 font-medium">Data</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Capo</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Brand</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Marketplace</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Prezzo Vendita</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">COGS</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine</th>
+                  <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Data</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
@@ -364,6 +371,7 @@ export default function DashboardPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </section>
       )}

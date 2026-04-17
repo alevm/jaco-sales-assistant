@@ -158,15 +158,16 @@ export function PriceTrends() {
           <div className="p-4 border-b border-stone-100">
             <h3 className="text-sm font-semibold text-stone-700">Performance per piattaforma</h3>
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <caption className="sr-only">Classifica piattaforme per margine medio</caption>
             <thead>
               <tr className="bg-stone-50 text-stone-500 text-left">
-                <th scope="col" className="px-4 py-3 font-medium">Piattaforma</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Venduti</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Prezzo medio</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Margine medio</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Margine %</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Piattaforma</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Venduti</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Prezzo medio</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine medio</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine %</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
@@ -185,6 +186,7 @@ export function PriceTrends() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -194,14 +196,15 @@ export function PriceTrends() {
           <div className="p-4 border-b border-stone-100">
             <h3 className="text-sm font-semibold text-stone-700">Top brand per vendite</h3>
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <caption className="sr-only">Top 10 brand per numero di vendite</caption>
             <thead>
               <tr className="bg-stone-50 text-stone-500 text-left">
-                <th scope="col" className="px-4 py-3 font-medium">Brand</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Venduti</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Prezzo medio</th>
-                <th scope="col" className="px-4 py-3 font-medium text-right">Margine medio</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Brand</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Venduti</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Prezzo medio</th>
+                <th scope="col" className="px-4 py-3 font-medium whitespace-nowrap text-right">Margine medio</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
@@ -217,6 +220,7 @@ export function PriceTrends() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </section>

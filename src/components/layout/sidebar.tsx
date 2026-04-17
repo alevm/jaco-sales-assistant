@@ -38,7 +38,7 @@ export function Sidebar() {
         onClick={() => setOpen(!open)}
         aria-label={open ? "Chiudi menu" : "Apri menu"}
         aria-expanded={open}
-        className="fixed top-3 left-3 z-50 md:hidden bg-stone-900 text-amber-400 p-2 rounded-lg shadow-lg"
+        className="fixed top-3 left-3 z-50 md:hidden bg-stone-900 text-amber-400 p-2.5 rounded-lg shadow-lg"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           {open ? (
@@ -77,7 +77,7 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                   active
                     ? "bg-amber-600/20 text-amber-300 font-medium"
                     : "text-stone-300 hover:bg-stone-800 hover:text-stone-100"

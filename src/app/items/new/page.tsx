@@ -329,7 +329,7 @@ export default function NewItemPage() {
           {uploadError && <p className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{uploadError}</p>}
 
           {images.length > 0 && (
-            <div className="mt-5 grid grid-cols-4 gap-3">
+            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {images.map((img, i) => (
                 <div key={i} className="relative group rounded-xl overflow-hidden border border-stone-200 aspect-square bg-stone-100">
                   <img src={img.preview} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
@@ -387,7 +387,7 @@ export default function NewItemPage() {
                 <ConfidenceBadge value={recognition.confidence} />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { label: "Tipo", value: itemType, set: setItemType },
                   { label: "Brand", value: brand, set: setBrand },
@@ -447,7 +447,7 @@ export default function NewItemPage() {
         <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm space-y-6">
           <h2 className="text-lg font-semibold text-stone-800">Dettagli e Prezzi</h2>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               { label: "Tipo", value: itemType, set: setItemType },
               { label: "Brand", value: brand, set: setBrand },
@@ -476,7 +476,7 @@ export default function NewItemPage() {
           {/* Pricing */}
           <div className="border-t border-stone-200 pt-5">
             <h3 className="text-sm font-semibold text-stone-700 uppercase tracking-wide mb-3">Prezzi e Margine</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <label className="block">
                 <span className="text-xs font-medium text-stone-500 uppercase tracking-wide">Marketplace</span>
                 <select value={marketplace} onChange={(e) => setMarketplace(e.target.value as Marketplace)}
@@ -505,7 +505,7 @@ export default function NewItemPage() {
 
             {(parseFloat(salePrice) > 0 || parseFloat(cogs) > 0) && (
               <div className="mt-4 bg-stone-50 rounded-xl border border-stone-200 p-4" aria-live="polite">
-                <div className="grid grid-cols-4 gap-4 text-center text-sm">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm">
                   <div>
                     <p className="text-stone-400 text-xs uppercase">Fee piattaforma</p>
                     <p className="text-stone-700 font-semibold mt-1">&euro;{margin.platformFee.toFixed(2)}</p>

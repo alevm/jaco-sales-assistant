@@ -183,7 +183,7 @@ export default function ItemsPage() {
           value={statusFilter}
           aria-label="Filtra per stato"
           onChange={(e) => setStatusFilter(e.target.value as "all" | ItemStatus)}
-          className="px-3 py-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+          className="px-3 py-2.5 rounded-lg border border-stone-300 bg-white text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
         >
           <option value="all">Tutti gli stati</option>
           <option value="draft">Bozza</option>
@@ -195,7 +195,7 @@ export default function ItemsPage() {
           value={marketplaceFilter}
           aria-label="Filtra per marketplace"
           onChange={(e) => setMarketplaceFilter(e.target.value as "all" | Marketplace)}
-          className="px-3 py-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+          className="px-3 py-2.5 rounded-lg border border-stone-300 bg-white text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
         >
           <option value="all">Tutti i marketplace</option>
           <option value="vinted">Vinted</option>
@@ -211,7 +211,7 @@ export default function ItemsPage() {
           value={sortKey}
           aria-label="Ordina per"
           onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="px-3 py-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
+          className="px-3 py-2.5 rounded-lg border border-stone-300 bg-white text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500"
         >
           <option value="recent">Più recenti</option>
           <option value="price_asc">Prezzo crescente</option>

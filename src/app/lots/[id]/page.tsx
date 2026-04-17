@@ -101,7 +101,7 @@ export default function LotDetailPage() {
       <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-6 mb-6">
         {editing ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-stone-600 mb-1">Nome</label>
                 <input
@@ -203,7 +203,7 @@ export default function LotDetailPage() {
               <Link
                 key={item.id}
                 href={`/items/${item.id}`}
-                className="flex items-center gap-4 bg-white rounded-xl border border-stone-200 p-4 hover:shadow-sm transition-all"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 bg-white rounded-xl border border-stone-200 p-4 hover:shadow-sm transition-all"
               >
                 <div className="w-12 h-12 rounded-lg bg-stone-100 overflow-hidden flex-shrink-0">
                   {images[0] ? (
