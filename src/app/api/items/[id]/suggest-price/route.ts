@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db";
 import { suggestPrice } from "@/lib/suggest-price";
 import type { Item, Marketplace, RecognitionResult } from "@/types/item";
 import { SuggestPriceBodySchema, validateBody } from "@/lib/schemas";
+import { claudeErrorResponse } from "@/lib/claude";
 
 export async function POST(
   request: NextRequest,
@@ -37,6 +38,10 @@ export async function POST(
         confidence: 0.5,
       };
 
-  const suggestion = await suggestPrice(recognition, marketplace);
-  return NextResponse.json(suggestion);
+  try {
+    const suggestion = await suggestPrice(recognition, marketplace);
+    return NextResponse.json(suggestion);
+  } catch (e) {
+    return claudeErrorResponse(e);
+  }
 }

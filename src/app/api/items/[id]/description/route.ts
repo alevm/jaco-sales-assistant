@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db";
 import { generateDescription } from "@/lib/describe";
 import type { Item, Marketplace, RecognitionResult } from "@/types/item";
 import { DescriptionBodySchema, validateBody } from "@/lib/schemas";
+import { claudeErrorResponse } from "@/lib/claude";
 
 export async function POST(
   request: NextRequest,
@@ -37,7 +38,12 @@ export async function POST(
         confidence: 0.5,
       };
 
-  const description = await generateDescription(recognition, marketplace, locale);
+  let description: string;
+  try {
+    description = await generateDescription(recognition, marketplace, locale);
+  } catch (e) {
+    return claudeErrorResponse(e);
+  }
 
   const field = locale === "it" ? "description_it" : "description_en";
   db.prepare(`UPDATE items SET ${field} = ?, updated_at = datetime('now') WHERE id = ?`).run(

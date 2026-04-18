@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recognizeItem } from "@/lib/recognize";
 import { RecognizeBodySchema, validateBody } from "@/lib/schemas";
+import { claudeErrorResponse } from "@/lib/claude";
 
 export async function POST(request: NextRequest) {
   const raw = await request.json();
@@ -17,6 +18,6 @@ export async function POST(request: NextRequest) {
     if (msg.startsWith("Invalid image path") || msg.startsWith("Failed to parse Claude")) {
       return NextResponse.json({ error: msg }, { status: 400 });
     }
-    throw e;
+    return claudeErrorResponse(e);
   }
 }
