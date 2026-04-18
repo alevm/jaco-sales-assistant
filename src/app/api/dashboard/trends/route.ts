@@ -113,28 +113,34 @@ export async function GET(request: NextRequest) {
   }
 
   // --- By category (item_type) per month ---
-  const catMonthMap = new Map<string, Map<string, number[]>>();
+  const catMonthMap = new Map<string, Map<string, { prices: number[]; margins: number[] }>>();
   for (const item of soldItems) {
     const cat = item.item_type || "Altro";
     const month = item.sold_at.slice(0, 7);
     if (!catMonthMap.has(cat)) catMonthMap.set(cat, new Map());
     const catEntry = catMonthMap.get(cat)!;
-    if (!catEntry.has(month)) catEntry.set(month, []);
-    catEntry.get(month)!.push(item.sold_price);
+    if (!catEntry.has(month)) catEntry.set(month, { prices: [], margins: [] });
+    const bucket = catEntry.get(month)!;
+    const fee = getPlatformFee(item.marketplace, item.sold_price);
+    const shipping = item.shipping_cost || 0;
+    const margin = item.sold_price - (item.cogs || 0) - fee - shipping;
+    bucket.prices.push(item.sold_price);
+    bucket.margins.push(margin);
   }
 
   const byCategory: CategoryTrend[] = [];
   for (const [category, months_data] of catMonthMap) {
     const points: TrendPoint[] = [];
-    for (const [month, prices] of Array.from(months_data.entries()).sort()) {
-      const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+    for (const [month, bucket] of Array.from(months_data.entries()).sort()) {
+      const totalRevenue = bucket.prices.reduce((a, b) => a + b, 0);
+      const totalMargin = bucket.margins.reduce((a, b) => a + b, 0);
       points.push({
         month,
-        avg_price: Math.round(avg * 100) / 100,
-        count: prices.length,
-        total_revenue: Math.round(prices.reduce((a, b) => a + b, 0) * 100) / 100,
-        total_margin: 0,
-        avg_margin: 0,
+        avg_price: Math.round((totalRevenue / bucket.prices.length) * 100) / 100,
+        count: bucket.prices.length,
+        total_revenue: Math.round(totalRevenue * 100) / 100,
+        total_margin: Math.round(totalMargin * 100) / 100,
+        avg_margin: Math.round((totalMargin / bucket.margins.length) * 100) / 100,
       });
     }
     byCategory.push({ category, points });
