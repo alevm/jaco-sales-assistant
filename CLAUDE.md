@@ -19,6 +19,16 @@ AI-powered sales assistant for vintage clothing (Jacopo's business). Supports: i
 
 Next.js 14+ (App Router, TypeScript), Claude API (Vision + text), SQLite (better-sqlite3), Tailwind CSS.
 
+## Claude auth adapter
+
+`src/lib/claude.ts` exposes `callClaude(params)` with a single call signature (Anthropic.Message-compatible) and reads the `CLAUDE_AUTH_MODE` env var at request time to pick a backend:
+
+- `subscription` (default when unset) → `@anthropic-ai/claude-agent-sdk` with `CLAUDE_CODE_OAUTH_TOKEN`. Billed under the Claude Max subscription Andrea already pays for.
+- `api` → `@anthropic-ai/sdk` with `ANTHROPIC_API_KEY`. Billed under prepaid API credits (a separate pot — do not use as the default).
+- Any other value throws a clear error.
+
+Flip modes by changing the env var and redeploying — no code change required. Both SDKs are in `dependencies` so either path works at runtime. Rationale: see `~/Current/Sisyphus/docs/decisions/20260418-ai-integration-switchable.md`.
+
 ## Critical notes (from 2026-04-12 panel review)
 
 **Status: CONDITIONAL GO** (single trusted operator, behind VPN/basic_auth).
