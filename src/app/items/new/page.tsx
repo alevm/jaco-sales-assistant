@@ -323,7 +323,7 @@ export default function NewItemPage() {
               onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.target.value = ""; }} />
             <div className="text-4xl mb-3 text-stone-400">{uploading ? <span className="inline-block animate-spin">&#8987;</span> : "\uD83D\uDCF7"}</div>
             <p className="text-stone-600 font-medium">{uploading ? "Caricamento..." : "Trascina le foto qui o clicca per selezionare"}</p>
-            <p className="text-stone-400 text-sm mt-1">JPG, PNG, WebP — max 5MB per file</p>
+            <p className="text-stone-400 text-sm mt-1">JPG, PNG, WebP — max 15MB per file</p>
           </div>
 
           {uploadError && <p className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{uploadError}</p>}

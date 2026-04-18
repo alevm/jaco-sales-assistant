@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
       if (!file.type.startsWith("image/")) {
         throw new Error(`Invalid file type: ${file.type}`);
       }
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error("File too large (max 5MB)");
+      if (file.size > 15 * 1024 * 1024) {
+        throw new Error("File too large (max 15MB)");
       }
 
       // Save file

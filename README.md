@@ -61,7 +61,7 @@ npm test
 
 | Method | Route | Purpose |
 |--------|-------|---------|
-| POST | `/api/upload` | Upload garment images (max 5MB) |
+| POST | `/api/upload` | Upload garment images (max 15MB) |
 | POST | `/api/recognize` | AI recognition via Claude Vision |
 | GET/POST | `/api/items` | List and create items |
 | GET/PUT/DELETE | `/api/items/[id]` | Item CRUD |

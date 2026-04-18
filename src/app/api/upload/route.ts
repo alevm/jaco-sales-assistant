@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
     if (!file.type.startsWith("image/")) {
       return NextResponse.json({ error: `Invalid file type: ${file.type}` }, { status: 400 });
     }
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 400 });
+    if (file.size > 15 * 1024 * 1024) {
+      return NextResponse.json({ error: "File too large (max 15MB)" }, { status: 400 });
     }
     try {
       const p = await saveUpload(file);
