@@ -33,6 +33,8 @@ Flip modes by changing the env var and redeploying — no code change required. 
 
 Next.js `output: "standalone"` uses node-file-trace to bundle only modules it judges reachable. The Anthropic SDKs (`@anthropic-ai/claude-agent-sdk`, `@anthropic-ai/sdk`) — one loaded via dynamic import in `src/lib/claude.ts`, one statically imported — must be listed in `serverExternalPackages` in `next.config.ts` so they're emitted to `.next/standalone/node_modules/`. A future refactor that drops them from that array will silently break `/api/recognize`, `/api/describe`, `/api/suggest-price`, and `/api/batch-upload` at runtime in the Docker image.
 
+The `runner` stage of the `Dockerfile` explicitly copies `@anthropic-ai/claude-agent-sdk-linux-x64-musl` from the builder, because the claude-agent-sdk resolves its native CLI binary via a dynamic `require("@anthropic-ai/claude-agent-sdk-" + platform)` that the standalone tracer misses. This path is tied to the `node:20-alpine` (musl) runner base — if the base image changes, update the COPY to the matching platform package (e.g. `-linux-x64` for glibc).
+
 ## Critical notes (from 2026-04-12 panel review)
 
 **Status: CONDITIONAL GO** (single trusted operator, behind VPN/basic_auth).
