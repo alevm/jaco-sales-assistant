@@ -83,3 +83,4 @@ See [docs/POSITIONING.md](docs/POSITIONING.md) for value prop, target user, comp
 | v1.0 | Market intelligence + multi-platform | ANA-02, SEL-03, SEL-02, SEL-05, CLI-01 |
 | v1.5 | Sourcing support + analytics | SRC-01, SRC-02, REL-02, ANA-03, CLI-03 |
 | v2.0 | Trend detection + automations | ANA-04, CLI-02, SRC-04, SEL-06, ANA-05 |
+
