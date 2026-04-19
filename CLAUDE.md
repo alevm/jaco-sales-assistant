@@ -29,6 +29,10 @@ Next.js 14+ (App Router, TypeScript), Claude API (Vision + text), SQLite (better
 
 Flip modes by changing the env var and redeploying — no code change required. Both SDKs are in `dependencies` so either path works at runtime. Rationale: see `~/Current/Sisyphus/docs/decisions/20260418-ai-integration-switchable.md`.
 
+## Deployment notes
+
+Next.js `output: "standalone"` uses node-file-trace to bundle only modules it judges reachable. The Anthropic SDKs (`@anthropic-ai/claude-agent-sdk`, `@anthropic-ai/sdk`) — one loaded via dynamic import in `src/lib/claude.ts`, one statically imported — must be listed in `serverExternalPackages` in `next.config.ts` so they're emitted to `.next/standalone/node_modules/`. A future refactor that drops them from that array will silently break `/api/recognize`, `/api/describe`, `/api/suggest-price`, and `/api/batch-upload` at runtime in the Docker image.
+
 ## Critical notes (from 2026-04-12 panel review)
 
 **Status: CONDITIONAL GO** (single trusted operator, behind VPN/basic_auth).
