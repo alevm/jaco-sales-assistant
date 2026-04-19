@@ -171,6 +171,9 @@ export default function NewItemPage() {
       setSize(result.size || "");
       setCondition(result.condition || "");
       setTags(result.tags || []);
+      if (result.price_suggestion_eur && typeof result.price_suggestion_eur.mid === "number") {
+        setSalePrice(String(result.price_suggestion_eur.mid));
+      }
     } catch (e: unknown) {
       setRecognizeError(e instanceof Error ? e.message : "Riconoscimento fallito");
     } finally {
@@ -412,6 +415,24 @@ export default function NewItemPage() {
                   </select>
                 </label>
               </div>
+
+              {recognition.brand_hints && !recognition.brand && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-sm text-amber-800">
+                  <span className="font-medium">Brand non identificato.</span> {recognition.brand_hints}
+                </div>
+              )}
+
+              {recognition.price_suggestion_eur && (
+                <div className="bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-700">
+                  <span className="font-medium">Prezzo suggerito (&euro;):</span>{" "}
+                  <span>low {recognition.price_suggestion_eur.low}</span>
+                  {" · "}
+                  <span>mid {recognition.price_suggestion_eur.mid}</span>
+                  {" · "}
+                  <span>high {recognition.price_suggestion_eur.high}</span>
+                  <div className="text-xs text-stone-500 mt-0.5">Precompilato come prezzo di vendita; puoi modificarlo al passo 3.</div>
+                </div>
+              )}
 
               {tags.length > 0 && (
                 <div>

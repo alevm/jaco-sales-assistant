@@ -63,9 +63,17 @@ export interface Tag {
   value: string;
 }
 
+export interface PriceSuggestionEUR {
+  low: number;
+  mid: number;
+  high: number;
+}
+
 export interface RecognitionResult {
   item_type: string;
   brand: string | null;
+  brand_confidence?: number | null;
+  brand_hints?: string | null;
   era: string;
   era_style: string | null;
   material: string;
@@ -74,6 +82,7 @@ export interface RecognitionResult {
   condition: Condition;
   tags: { category: string; value: string }[];
   confidence: number;
+  price_suggestion_eur?: PriceSuggestionEUR | null;
 }
 
 export interface ItemWithTags extends Item {

@@ -54,12 +54,22 @@ export async function POST(request: NextRequest) {
         entry.recognition = { error: (recError as Error).message };
       }
 
+      // Pull recognised price-suggestion mid as the draft sale_price default.
+      const priceSugg = recognition.price_suggestion_eur as
+        | { low?: number; mid?: number; high?: number }
+        | null
+        | undefined;
+      const salePriceDefault =
+        priceSugg && typeof priceSugg.mid === "number" && priceSugg.mid > 0
+          ? priceSugg.mid
+          : null;
+
       // Create item record
       const id = uuidv4();
       const stmt = db.prepare(`
         INSERT INTO items (id, lot_id, item_type, brand, era, era_style, material, color, size, condition,
-          status, recognition_raw, image_paths)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)
+          sale_price, status, recognition_raw, image_paths)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?)
       `);
       stmt.run(
         id,
@@ -72,6 +82,7 @@ export async function POST(request: NextRequest) {
         (recognition.color as string) || null,
         (recognition.size as string) || null,
         (recognition.condition as string) || null,
+        salePriceDefault,
         JSON.stringify(recognition),
         JSON.stringify([imagePath])
       );

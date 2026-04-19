@@ -103,4 +103,16 @@ UI (`/feedback`): status chip next to the priority chip, and `pm_response` rende
 
 Remaining P2 items (prompt injection, float money, fee accuracy, structured logging, SIGTERM) are acceptable at A- for single-tenant MVP behind auth.
 
+## Recognize pipeline: brand + price fields (2026-04-19)
+
+`/api/recognize` now returns three extra fields alongside the existing ones so Jacopo can actually publish a listing without hand-filling brand/price:
+
+- `brand_confidence` (0.0–1.0) — how sure Claude is about `brand`. Populated whenever `brand` is a non-null string.
+- `brand_hints` (string or null) — set when `brand` is null, describing what the model sees on labels/tags so the user can zoom or re-shoot. Null when brand is populated.
+- `price_suggestion_eur` — `{low, mid, high}` EUR figures for the European second-hand market (Vinted IT / Depop / Wallapop / eBay / Vestiaire). Always present.
+
+Prompt changes (`src/lib/recognize.ts`) discourage `brand: null` — a low-confidence guess is preferred over null. Prompt includes two worked examples and a brand-recognition primer weighted to Italian/European market brands (Carhartt, Stone Island, Fila, Kappa, Ellesse, Levi's, Fiorucci, etc.). `max_tokens` bumped to 1536 to fit the longer response.
+
+Draft flow (`src/app/api/batch-upload/route.ts`, `src/app/items/new/page.tsx`) now defaults `sale_price = price_suggestion_eur.mid` so the generated listing has a non-null starting price. User can override before listing. `recognize.ts` is downstream of `RecognitionResult` in `src/types/item.ts` — the three new fields are optional on the type so existing callers (describe, suggest-price, mocks) stay backward-compatible.
+
 See `PANEL_REVIEW_A_MINUS.md` for full gap analysis and `ARCHITECT_REVIEW_2026-04-11.md` for original findings.
