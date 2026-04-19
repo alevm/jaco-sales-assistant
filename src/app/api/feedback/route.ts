@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { notifyFeedbackTelegram } from "@/lib/notify-telegram";
 import { z } from "zod";
 
 const feedbackSchema = z.object({
@@ -46,6 +47,8 @@ export async function POST(request: NextRequest) {
     const created = db
       .prepare("SELECT * FROM feedback WHERE id = ?")
       .get(result.lastInsertRowid);
+
+    void notifyFeedbackTelegram({ title, description, priority });
 
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
