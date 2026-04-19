@@ -8,6 +8,8 @@ interface FeedbackItem {
   description: string;
   priority: "nice-to-have" | "important" | "urgent";
   status: string;
+  pm_response: string | null;
+  pm_responded_at: string | null;
   created_at: string;
 }
 
@@ -15,6 +17,15 @@ const PRIORITY_LABELS: Record<string, { label: string; css: string }> = {
   "nice-to-have": { label: "Nice to have", css: "bg-stone-100 text-stone-600" },
   important: { label: "Importante", css: "bg-amber-100 text-amber-800" },
   urgent: { label: "Urgente", css: "bg-red-100 text-red-800" },
+};
+
+const STATUS_LABELS: Record<string, { label: string; css: string }> = {
+  new: { label: "Nuovo", css: "bg-sky-100 text-sky-800" },
+  under_review: { label: "In esame", css: "bg-indigo-100 text-indigo-800" },
+  accepted: { label: "Accettato", css: "bg-emerald-100 text-emerald-800" },
+  declined: { label: "Rifiutato", css: "bg-stone-200 text-stone-700" },
+  done: { label: "Completato", css: "bg-green-100 text-green-800" },
+  needs_info: { label: "Info richieste", css: "bg-amber-100 text-amber-800" },
 };
 
 export default function FeedbackPage() {
@@ -177,13 +188,19 @@ export default function FeedbackPage() {
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${PRIORITY_LABELS[item.priority]?.css || "bg-stone-100 text-stone-600"}`}>
                       {PRIORITY_LABELS[item.priority]?.label || item.priority}
                     </span>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-500">
-                      {item.status}
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_LABELS[item.status]?.css || "bg-stone-100 text-stone-500"}`}>
+                      {STATUS_LABELS[item.status]?.label || item.status}
                     </span>
                   </div>
                 </div>
                 {item.description && (
                   <p className="text-sm text-stone-500 mt-2 whitespace-pre-line">{item.description}</p>
+                )}
+                {item.pm_response && (
+                  <div className="mt-3 border-l-2 border-amber-400 pl-3">
+                    <p className="text-xs font-semibold text-stone-700">Risposta del team</p>
+                    <p className="text-sm text-stone-600 mt-1 whitespace-pre-line">{item.pm_response}</p>
+                  </div>
                 )}
                 <p className="text-xs text-stone-400 mt-2">
                   {new Date(item.created_at).toLocaleDateString("it-IT", {

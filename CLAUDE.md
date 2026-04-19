@@ -73,6 +73,24 @@ T3 Feature additions:
 - [x] SVG line charts on dashboard (no chart library): rolling avg price, margin trend, category comparison
 - [x] Platform performance table + top brand table on dashboard
 
+## Feedback loop (2026-04-19)
+
+Jacopo submits feedback at `/feedback`; pm-jaco-sales-assistant replies via a bus-response-sync daemon (architect-owned, laptop-side — wired separately) that PATCHes `/api/feedback/:id` whenever a bus ticket for a feedback item is closed. The UI surfaces the reply back to Jacopo — closed loop without email.
+
+Schema (migration `005_feedback_pm_response.sql`):
+
+- `status` enum: `new` (default) / `under_review` / `accepted` / `declined` / `done` / `needs_info`. Legacy rows with `status='open'` were migrated to `'new'` in-place.
+- `pm_response` TEXT nullable — plaintext, rendered as-is in the UI (no markdown parser).
+- `pm_responded_at` TEXT nullable — ISO timestamp, auto-set whenever `pm_response` actually changes (not when only `status` changes).
+
+Endpoints:
+
+- `GET /api/feedback` — returns all rows including the three new fields.
+- `POST /api/feedback` — unchanged body (`title`, `description`, `priority`); new rows get `status='new'` and `pm_response=null`.
+- `PATCH /api/feedback/:id` — auth-guarded by the same middleware as every other `/api` route (Authelia or Bearer `API_SECRET`). Body: `{status?, pm_response?}` — zod-validated, at least one required. Returns the full updated row; `404` if id missing, `400` on validation/id-format error.
+
+UI (`/feedback`): status chip next to the priority chip, and `pm_response` rendered under the description as "Risposta del team" when non-null (silent otherwise).
+
 Remaining P2 items (prompt injection, float money, fee accuracy, structured logging, SIGTERM) are acceptable at A- for single-tenant MVP behind auth.
 
 See `PANEL_REVIEW_A_MINUS.md` for full gap analysis and `ARCHITECT_REVIEW_2026-04-11.md` for original findings.

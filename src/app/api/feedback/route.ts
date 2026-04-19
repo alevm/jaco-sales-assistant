@@ -9,11 +9,14 @@ const feedbackSchema = z.object({
   priority: z.enum(["nice-to-have", "important", "urgent"]).default("nice-to-have"),
 });
 
+const FEEDBACK_COLUMNS =
+  "id, title, description, priority, status, pm_response, pm_responded_at, created_at";
+
 export async function GET() {
   try {
     const db = getDb();
     const rows = db
-      .prepare("SELECT * FROM feedback ORDER BY created_at DESC")
+      .prepare(`SELECT ${FEEDBACK_COLUMNS} FROM feedback ORDER BY created_at DESC`)
       .all();
     return NextResponse.json(rows);
   } catch (error) {
@@ -40,12 +43,12 @@ export async function POST(request: NextRequest) {
     const db = getDb();
     const result = db
       .prepare(
-        "INSERT INTO feedback (title, description, priority) VALUES (?, ?, ?)"
+        "INSERT INTO feedback (title, description, priority, status) VALUES (?, ?, ?, 'new')"
       )
       .run(title, description, priority);
 
     const created = db
-      .prepare("SELECT * FROM feedback WHERE id = ?")
+      .prepare(`SELECT ${FEEDBACK_COLUMNS} FROM feedback WHERE id = ?`)
       .get(result.lastInsertRowid);
 
     void notifyFeedbackTelegram({ title, description, priority });
