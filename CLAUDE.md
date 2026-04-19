@@ -29,6 +29,16 @@ Next.js 14+ (App Router, TypeScript), Claude API (Vision + text), SQLite (better
 
 Flip modes by changing the env var and redeploying — no code change required. Both SDKs are in `dependencies` so either path works at runtime. Rationale: see `~/Current/Sisyphus/docs/decisions/20260418-ai-integration-switchable.md`.
 
+## Persistence model
+
+Everything that must survive a `docker compose up --force-recreate` lives under `/data`, which compose mounts as the named volume `jaco-data`. Everything under `/app` is rebuilt from the image on every deploy.
+
+- `DB_PATH=/data/vintage.db` — SQLite file + its `-wal` / `-shm` sidecars.
+- `UPLOADS_DIR=/data/uploads` — user-uploaded photos.
+- `/app/data/migrations/` ships in the image (read-only SQL files, applied on first boot against the mounted DB).
+
+Both env vars have a local-dev fallback (`./data/vintage.db`, `./public/uploads`) so `npm run dev` and `npm test` work unchanged. The Dockerfile sets them explicitly for production. The public URL for photos is still `/uploads/<uuid>.<ext>`; `src/app/uploads/[filename]/route.ts` streams the file from `UPLOADS_DIR` because `public/uploads/` no longer holds user content in the image.
+
 ## Deployment notes
 
 Next.js `output: "standalone"` uses node-file-trace to bundle only modules it judges reachable. The Anthropic SDKs (`@anthropic-ai/claude-agent-sdk`, `@anthropic-ai/sdk`) — one loaded via dynamic import in `src/lib/claude.ts`, one statically imported — must be listed in `serverExternalPackages` in `next.config.ts` so they're emitted to `.next/standalone/node_modules/`. A future refactor that drops them from that array will silently break `/api/recognize`, `/api/describe`, `/api/suggest-price`, and `/api/batch-upload` at runtime in the Docker image.

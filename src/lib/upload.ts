@@ -2,11 +2,14 @@ import fs from "fs";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
-const UPLOAD_DIR = path.resolve("public/uploads");
+function getUploadDir(): string {
+  return process.env.UPLOADS_DIR || path.resolve("public/uploads");
+}
 
 export function ensureUploadDir() {
-  if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  const dir = getUploadDir();
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
   }
 }
 
@@ -20,7 +23,7 @@ export async function saveUpload(file: File): Promise<string> {
     throw new Error(`File extension not allowed: ${ext}`);
   }
   const filename = `${uuidv4()}${ext}`;
-  const filepath = path.join(UPLOAD_DIR, filename);
+  const filepath = path.join(getUploadDir(), filename);
 
   const buffer = Buffer.from(await file.arrayBuffer());
   fs.writeFileSync(filepath, buffer);
@@ -29,8 +32,14 @@ export async function saveUpload(file: File): Promise<string> {
 }
 
 export function deleteUpload(relativePath: string) {
-  const fullPath = path.resolve("public", relativePath.replace(/^\//, ""));
-  if (!fullPath.startsWith(UPLOAD_DIR + path.sep) && fullPath !== UPLOAD_DIR) {
+  const uploadDir = getUploadDir();
+  const cleaned = relativePath.replace(/^\//, "");
+  if (cleaned.includes("..") || !cleaned.startsWith("uploads/")) {
+    throw new Error("Path traversal blocked: file is outside upload directory");
+  }
+  const filename = cleaned.slice("uploads/".length);
+  const fullPath = path.resolve(uploadDir, filename);
+  if (!fullPath.startsWith(uploadDir + path.sep) && fullPath !== uploadDir) {
     throw new Error("Path traversal blocked: file is outside upload directory");
   }
   if (fs.existsSync(fullPath)) {

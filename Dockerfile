@@ -27,7 +27,8 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/data ./data
+# Ship migration SQL files only — the DB file lives on the /data volume (see below).
+COPY --from=builder /app/data/migrations ./data/migrations
 
 # The @anthropic-ai/claude-agent-sdk package resolves its native CLI binary via a
 # dynamic require of a platform-specific sibling (`@anthropic-ai/claude-agent-sdk-<plat>`).
@@ -36,8 +37,12 @@ COPY --from=builder /app/data ./data
 # assumes the Alpine (musl) base image — if the runner base changes, update here.
 COPY --from=builder /app/node_modules/@anthropic-ai/claude-agent-sdk-linux-x64-musl ./node_modules/@anthropic-ai/claude-agent-sdk-linux-x64-musl
 
-# Ensure uploads and data dirs are writable
-RUN mkdir -p public/uploads data && chown -R nextjs:nodejs public/uploads data
+# Persistence paths — both live on the jaco-data volume mounted at /data.
+# Without these, every `docker compose up --force-recreate` wipes inventory/feedback/uploads.
+ENV DB_PATH=/data/vintage.db
+ENV UPLOADS_DIR=/data/uploads
+
+RUN mkdir -p /data /data/uploads && chown -R nextjs:nodejs /data
 
 USER nextjs
 

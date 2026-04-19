@@ -36,15 +36,22 @@ Rules:
 - Confidence is 0-1 reflecting how certain you are overall
 - Return ONLY the JSON, no markdown fences, no explanation`;
 
-const UPLOADS_ROOT = path.resolve("public/uploads");
+function getUploadsRoot(): string {
+  return process.env.UPLOADS_DIR || path.resolve("public/uploads");
+}
 
 export function validateImagePath(imagePath: string): string {
   const cleaned = imagePath.replace(/^\//, "");
   if (cleaned.includes("..")) {
     throw new Error("Invalid image path: path traversal not allowed");
   }
-  const fullPath = path.resolve("public", cleaned);
-  if (!fullPath.startsWith(UPLOADS_ROOT + path.sep) && fullPath !== UPLOADS_ROOT) {
+  if (!cleaned.startsWith("uploads/")) {
+    throw new Error("Invalid image path: must be within uploads directory");
+  }
+  const filename = cleaned.slice("uploads/".length);
+  const uploadsRoot = getUploadsRoot();
+  const fullPath = path.resolve(uploadsRoot, filename);
+  if (!fullPath.startsWith(uploadsRoot + path.sep) && fullPath !== uploadsRoot) {
     throw new Error("Invalid image path: must be within uploads directory");
   }
   return fullPath;
