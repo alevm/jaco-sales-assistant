@@ -83,6 +83,15 @@ T3 Feature additions:
 - [x] SVG line charts on dashboard (no chart library): rolling avg price, margin trend, category comparison
 - [x] Platform performance table + top brand table on dashboard
 
+## Publish helpers: ZIP export + Share sheet (2026-04-19)
+
+Two friction-reducers wrapping the existing `listing-formatter.ts` output so Jacopo can move a listing to any platform without re-handling photos:
+
+- `GET /api/items/:id/export?platform=<p>` — streams `application/zip` containing `photos/<original-filename>`, `listing.txt` (localized copy-paste block), `README.txt` (3-step Italian instructions; English for eBay). Uses `jszip` (added dep). Photo resolution goes through the same path-traversal guards as `deleteUpload` / the uploads route — only files inside `UPLOADS_DIR` are included.
+- "Scarica pacchetto" button in the Pubblica tab — fires a plain `window.location.href` download for the selected platform.
+- "Condividi" button in the Pubblica tab — calls `navigator.share({ title, text, files })` on mobile when `navigator.canShare({files})` returns true (iOS 15+ Safari, Chrome Android). Hidden on desktop/Firefox where file-sharing is unsupported. Errors (user cancel, blob fetch failure) are swallowed silently per the spec. `navigator.canShare` detection is extracted to `src/lib/web-share.ts:detectCanShareFiles` so it is unit-testable in Node.
+- Platform-plaintext rendering is in `src/lib/export-bundle.ts` — kept separate from `listing-formatter.ts` (which is a ticket invariant) so future wording tweaks don't touch the structured JSON contract.
+
 ## Feedback loop (2026-04-19)
 
 Jacopo submits feedback at `/feedback`; pm-jaco-sales-assistant replies via a bus-response-sync daemon (architect-owned, laptop-side — wired separately) that PATCHes `/api/feedback/:id` whenever a bus ticket for a feedback item is closed. The UI surfaces the reply back to Jacopo — closed loop without email.

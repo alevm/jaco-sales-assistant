@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Marketplace } from "@/types/item";
+import { detectCanShareFiles } from "@/lib/web-share";
 
 interface FormattedListing {
   platform: Marketplace;
@@ -41,6 +42,67 @@ export function ListingPanel({
   const [copied, setCopied] = useState<string | null>(null);
   const [listedPlatforms, setListedPlatforms] = useState<string[]>(initialListed);
   const [marking, setMarking] = useState(false);
+  const [canShareFiles, setCanShareFiles] = useState(false);
+  const [sharing, setSharing] = useState(false);
+
+  useEffect(() => {
+    setCanShareFiles(detectCanShareFiles());
+  }, []);
+
+  const downloadZip = useCallback((platform: Marketplace) => {
+    window.location.href = `/api/items/${itemId}/export?platform=${platform}`;
+  }, [itemId]);
+
+  const shareListing = useCallback(async (platform: Marketplace) => {
+    if (!canShareFiles) return;
+    setSharing(true);
+    try {
+      const listingRes = await fetch(`/api/items/${itemId}/listing?platform=${platform}`);
+      if (!listingRes.ok) throw new Error("listing fetch failed");
+      const l: FormattedListing = await listingRes.json();
+
+      const imgRes = await fetch(`/api/items/${itemId}`);
+      if (!imgRes.ok) throw new Error("item fetch failed");
+      const itemData = await imgRes.json();
+      const rawPaths: unknown = itemData.image_paths;
+      const imagePaths: string[] = Array.isArray(rawPaths)
+        ? rawPaths
+        : typeof rawPaths === "string"
+          ? (() => { try { return JSON.parse(rawPaths || "[]"); } catch { return []; } })()
+          : [];
+
+      const files: File[] = [];
+      for (const p of imagePaths) {
+        try {
+          const r = await fetch(p);
+          if (!r.ok) continue;
+          const blob = await r.blob();
+          const name = p.split("/").pop() || "photo.jpg";
+          files.push(new File([blob], name, { type: blob.type || "image/jpeg" }));
+        } catch {
+          // skip individual failure
+        }
+      }
+
+      const nav = navigator as Navigator & {
+        canShare?: (data?: { files?: File[] }) => boolean;
+        share?: (data: { title?: string; text?: string; files?: File[] }) => Promise<void>;
+      };
+      if (!nav.share) return;
+
+      const payload = {
+        title: l.title,
+        text: `${l.description}\n\n${l.hashtags.join(" ")}`,
+        files: files.length > 0 && nav.canShare?.({ files }) ? files : undefined,
+      };
+
+      await nav.share(payload);
+    } catch {
+      // User cancelled or a file was unavailable — stay silent per spec.
+    } finally {
+      setSharing(false);
+    }
+  }, [itemId, canShareFiles]);
 
   const generateListing = useCallback(async (platform: Marketplace) => {
     setSelectedPlatform(platform);
@@ -258,8 +320,8 @@ export function ListingPanel({
             </div>
           )}
 
-          {/* Copy all + Mark as listed */}
-          <div className="flex gap-3 pt-2">
+          {/* Copy all + Mark as listed + ZIP + Share */}
+          <div className="flex gap-3 pt-2 flex-wrap">
             <button
               onClick={() => copyToClipboard(
                 `${listing.title}\n\n${listing.description}`,
@@ -269,6 +331,23 @@ export function ListingPanel({
             >
               {copied === "all" ? "Copiato tutto!" : "Copia tutto"}
             </button>
+            <button
+              data-testid="download-zip"
+              onClick={() => downloadZip(listing.platform)}
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+            >
+              Scarica pacchetto
+            </button>
+            {canShareFiles && (
+              <button
+                data-testid="share-listing"
+                onClick={() => shareListing(listing.platform)}
+                disabled={sharing}
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50 transition-colors"
+              >
+                {sharing ? "Condivisione..." : "Condividi"}
+              </button>
+            )}
             {!listedPlatforms.includes(listing.platform) && (
               <button
                 onClick={() => markAsListed(listing.platform)}
