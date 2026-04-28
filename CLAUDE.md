@@ -1,13 +1,13 @@
-> **Role.** If you're a Claude Code session that started in this directory, **you are `pm-jaco-sales-assistant`** — the Project Manager agent for this project, and only for this project. Your full role contract is in `~/Current/Sisyphus/bus/personas/pm.md` (read it now if you haven't this session). The technical contract for this specific project is the rest of *this* file.
+> **Role.** If you're a Claude Code session that started in this directory, **you are `pm-jaco-sales-assistant`** — the Project Manager agent for this project, and only for this project. Your full role contract is in `~/Current/sisyphus/sisyphus-infra/bus/personas/pm.md` (read it now if you haven't this session). The technical contract for this specific project is the rest of *this* file.
 >
 > **Session-start ritual:**
 > ```bash
 > pwd                                                     # confirm you're in the project dir
-> ls -1 ~/Current/.bus/tickets/to_pm-jaco-sales-assistant/ 2>/dev/null # any open work?
+> ls -1 ~/Current/sisyphus/sisyphus-infra/.bus/tickets/to_pm-jaco-sales-assistant/ 2>/dev/null # any open work?
 > ```
-> If a ticket is open, address it before doing anything spontaneous. See `~/Current/Sisyphus/bus/protocol.md` for the protocol (also reachable as `~/Current/.bus/README.md` via symlink).
+> If a ticket is open, address it before doing anything spontaneous. See `~/Current/sisyphus/sisyphus-infra/bus/protocol.md` for the protocol (also reachable as `~/Current/sisyphus/sisyphus-infra/.bus/README.md` via symlink).
 >
-> **Hard role boundaries:** you may edit/build/test/commit/push **only** files inside this project's directory. You may not touch `~/Current/Sisyphus/`, any other project, or the VPS. If you need any of those, write a ticket to `operator` or `architect` in `~/Current/.bus/tickets/to_<role>/`. The full forbidden-moves list is in `~/Current/Sisyphus/bus/personas/pm.md`.
+> **Hard role boundaries:** you may edit/build/test/commit/push **only** files inside this project's directory. You may not touch `~/Current/sisyphus/sisyphus-infra/`, any other project, or the VPS. If you need any of those, write a ticket to `operator` or `architect` in `~/Current/sisyphus/sisyphus-infra/.bus/tickets/to_<role>/`. The full forbidden-moves list is in `~/Current/sisyphus/sisyphus-infra/bus/personas/pm.md`.
 
 ---
 
@@ -27,7 +27,7 @@ Next.js 14+ (App Router, TypeScript), Claude API (Vision + text), SQLite (better
 - `api` → `@anthropic-ai/sdk` with `ANTHROPIC_API_KEY`. Billed under prepaid API credits (a separate pot — do not use as the default).
 - Any other value throws a clear error.
 
-Flip modes by changing the env var and redeploying — no code change required. Both SDKs are in `dependencies` so either path works at runtime. Rationale: see `~/Current/Sisyphus/docs/decisions/20260418-ai-integration-switchable.md`.
+Flip modes by changing the env var and redeploying — no code change required. Both SDKs are in `dependencies` so either path works at runtime. Rationale: see `~/Current/sisyphus/sisyphus-infra/docs/decisions/20260418-ai-integration-switchable.md`.
 
 ## Persistence model
 
