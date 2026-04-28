@@ -49,3 +49,8 @@ ARCHITECT_REVIEW_2026-04-11.md
 .claude/
 PANEL_REVIEW_2026-04-12.md
 PANEL_REVIEW_A_MINUS.md
+
+# DB backups (large + ephemeral, never commit)
+backups/
+*.db-shm
+*.db-wal
